@@ -5,11 +5,7 @@ import sys
 import pprint
 import json
 
-from pyairctrl.base_client import (
-    NotSupportedException,
-    SetValueException,
-    AirClientBase,
-)
+from pyairctrl.base_client import NotSupportedException, SetValueException
 from pyairctrl.coap_client import CoAPAirClient
 from pyairctrl.http_client import HTTPAirClient
 from pyairctrl.plain_coap_client import PlainCoAPAirClient
@@ -25,7 +21,7 @@ class ClientFactory:
     @staticmethod
     def _format_key_values(status):
         for key in status:
-            if status[key]["value"] is None:
+            if "value" not in status[key] or status[key]["value"] is None:
                 continue
 
             name_and_value = ClientFactory._get_name_for_key(key, status[key])

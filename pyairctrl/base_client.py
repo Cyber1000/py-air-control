@@ -9,6 +9,7 @@ from coapthon.messages.request import Request
 
 from pyairctrl.status_transformer import STATUS_TRANSFORMER
 from pyairctrl.subset_enum import subsetEnum
+from datetime import timezone, datetime
 
 
 class NotSupportedException(Exception):
@@ -70,6 +71,10 @@ class AirClientBase(ABC):
                 continue
 
             new_status[key] = name_and_value
+        new_status["generalInfo"] = {
+            "unixtimestamp": datetime.now(tz=timezone.utc).timestamp(),
+            "utctime": str(datetime.now(tz=timezone.utc)),
+        }
         return new_status
 
     @abstractmethod
