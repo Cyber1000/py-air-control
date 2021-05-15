@@ -4,7 +4,7 @@ import os
 import json
 import pytest
 from pyairctrl.http_client import HTTPAirClient
-from pyairctrl.airctrl import ClientFactory
+from pyairctrl.clientfactory import ClientFactory
 from testing.http_test_server import HttpTestServer
 from testing.http_test_controller import HttpTestController
 from pyairctrl.subset_enum import subsetEnum

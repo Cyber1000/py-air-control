@@ -5,7 +5,7 @@ import json
 from pyairctrl.base_client import NotSupportedException
 import pytest
 from pyairctrl.coap_client import CoAPAirClient
-from pyairctrl.airctrl import ClientFactory
+from pyairctrl.clientfactory import ClientFactory
 from testing.coap_test_server import CoAPTestServer
 from testing.coap_resources import SyncResource, ControlResource, StatusResource
 from pyairctrl.subset_enum import subsetEnum
