@@ -36,7 +36,7 @@ class PlainCoAPAirClient(CoAPAirClientBase):
             ownIp = self._get_ip()
 
             header = self._create_icmp_header()
-            data = self._create_icmp_data(ownIp, self.port, self._host, self.port)
+            data = self._create_icmp_data(ownIp, self._port, self._host, self._port)
             packet = header + data
             packet = self._create_icmp_header(self._checksum_icmp(packet)) + data
 

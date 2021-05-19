@@ -106,15 +106,17 @@ class HTTPAirClient(AirClientBase):
 
         return resp
 
-    def __init__(self, name, host, debug=False):
-        super().__init__(name, host, debug)
+    def __init__(self, name, host, port=80, debug=False):
+        super().__init__(name, host, port, debug)
         self._session_key = None
         self.load_key()
 
     def _get_key(self):
         if self._debug:
             print("Exchanging secret key with the device ...")
-        url = "http://{}/di/v1/products/0/security".format(self._host)
+        url = "http://{host}:{port}/di/v1/products/0/security".format(
+            host=self._host, port=self._port
+        )
         a = random.getrandbits(256)
         A = pow(G, a, P)
         data = json.dumps({"diffie": format(A, "x")})
@@ -161,7 +163,9 @@ class HTTPAirClient(AirClientBase):
         return self._session_key
 
     def _check_key(self):
-        url = "http://{}/di/v1/products/1/air".format(self._host)
+        url = "http://{host}:{port}/di/v1/products/1/air".format(
+            host=self._host, port=self._port
+        )
         self._get(url)
 
     def set_values(self, values, subset=None):
@@ -173,7 +177,9 @@ class HTTPAirClient(AirClientBase):
     def _set_values(self, values):
         try:
             body = encrypt(values, self._session_key)
-            url = "http://{}/di/v1/products/1/air".format(self._host)
+            url = "http://{host}:{port}/di/v1/products/1/air".format(
+                host=self._host, port=self._port
+            )
             req = urllib.request.Request(url=url, data=body, method="PUT")
             with urllib.request.urlopen(req) as response:
                 resp = response.read()
@@ -188,7 +194,9 @@ class HTTPAirClient(AirClientBase):
 
     def _set_wifi(self, values):
         body = encrypt(values, self._session_key)
-        url = "http://{}/di/v1/products/0/wifi".format(self._host)
+        url = "http://{host}:{port}/di/v1/products/0/wifi".format(
+            host=self._host, port=self._port
+        )
         req = urllib.request.Request(url=url, data=body, method="PUT")
         with urllib.request.urlopen(req) as response:
             resp = response.read()
@@ -215,13 +223,21 @@ class HTTPAirClient(AirClientBase):
 
     def get_information(self, subset=None):
         if subset is None:
-            url = "http://{}/di/v1/products/1/air".format(self._host)
+            url = "http://{host}:{port}/di/v1/products/1/air".format(
+                host=self._host, port=self._port
+            )
         elif subset == subsetEnum.wifi:
-            url = "http://{}/di/v1/products/0/wifi".format(self._host)
+            url = "http://{host}:{port}/di/v1/products/0/wifi".format(
+                host=self._host, port=self._port
+            )
         elif subset == subsetEnum.firmware:
-            url = "http://{}/di/v1/products/0/firmware".format(self._host)
+            url = "http://{host}:{port}/di/v1/products/0/firmware".format(
+                host=self._host, port=self._port
+            )
         elif subset == subsetEnum.filter:
-            url = "http://{}/di/v1/products/1/fltsts".format(self._host)
+            url = "http://{host}:{port}/di/v1/products/1/fltsts".format(
+                host=self._host, port=self._port
+            )
 
         info = self._get(url)
         info = self._dump_keys(info, subset)
@@ -231,7 +247,9 @@ class HTTPAirClient(AirClientBase):
         values = {}
         values["Pair"] = ["FI-AIR-AND", client_id, client_secret]
         body = encrypt(values, self._session_key)
-        url = "http://{}/di/v1/products/0/pairing".format(self._host)
+        url = "http://{host}:{port}/di/v1/products/0/pairing".format(
+            host=self._host, port=self._port
+        )
         req = urllib.request.Request(url=url, data=body, method="PUT")
         with urllib.request.urlopen(req) as response:
             resp = response.read()

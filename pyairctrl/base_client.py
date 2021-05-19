@@ -21,10 +21,11 @@ class SetValueException(Exception):
 
 
 class AirClientBase(ABC):
-    def __init__(self, name, host, debug=False):
+    def __init__(self, name, host, port, debug=False):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel("WARN") if debug else self.logger.setLevel("DEBUG")
         self._host = host
+        self._port = port
         self._debug = debug
         self.name = name
 
@@ -98,9 +99,8 @@ class CoAPAirClientBase(AirClientBase):
     SYNC_PATH = "/sys/dev/sync"
 
     def __init__(self, name, host, port, debug=False):
-        super().__init__(name, host, debug)
-        self.port = port
-        self.client = self._create_coap_client(self._host, self.port)
+        super().__init__(name, host, port, debug)
+        self.client = self._create_coap_client()
         self.response = None
         self._initConnection()
 
@@ -109,8 +109,8 @@ class CoAPAirClientBase(AirClientBase):
             self.client.cancel_observing(self.response, True)
         self.client.stop()
 
-    def _create_coap_client(self, host, port):
-        return HelperClient(server=(host, port))
+    def _create_coap_client(self):
+        return HelperClient(server=(self._host, self._port))
 
     def get_information(self, subset=None):
         if subset == subsetEnum.wifi:
@@ -169,7 +169,7 @@ class CoAPAirClientBase(AirClientBase):
 
     def _send_empty_message(self):
         request = Request()
-        request.destination = server = (self._host, self.port)
+        request.destination = server = (self._host, self._port)
         request.code = defines.Codes.EMPTY.number
         self.client.send_empty(request)
 

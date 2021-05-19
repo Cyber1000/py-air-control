@@ -15,11 +15,11 @@ class TestHTTP:
 
     @pytest.fixture(scope="class")
     def air_client(self):
-        return HTTPAirClient("http", "127.0.0.1")
+        return HTTPAirClient("http", "127.0.0.1", 5000)
 
     @pytest.fixture(scope="class")
     def air_cli(self):
-        return ClientFactory.create("http", "cli", "127.0.0.1", False)
+        return ClientFactory.create("http", "cli", "127.0.0.1", 5000, False)
 
     @pytest.fixture(scope="class")
     def test_data(self):

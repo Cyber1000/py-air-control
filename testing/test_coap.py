@@ -18,7 +18,7 @@ class TestCoap:
 
     @pytest.fixture(scope="class")
     def air_cli(self):
-        return ClientFactory.create("coap", "cli", "127.0.0.1", False)
+        return ClientFactory.create("coap", "cli", "127.0.0.1", debug=False)
 
     @pytest.fixture(scope="class")
     def test_data(self):

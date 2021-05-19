@@ -14,6 +14,10 @@ class ClientFactory:
             return CoAPAirClient
 
     @staticmethod
-    def create(protocol, name, host, debug):
+    def create(protocol, name, host, port=None, debug=False):
         client = ClientFactory.get_client_class(protocol)
-        return client(name, host, debug=debug)
+        return (
+            client(name, host, debug=debug)
+            if port is None
+            else client(name, host, port, debug=debug)
+        )
