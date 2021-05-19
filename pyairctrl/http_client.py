@@ -106,8 +106,8 @@ class HTTPAirClient(AirClientBase):
 
         return resp
 
-    def __init__(self, host, debug=False):
-        super().__init__(host, debug)
+    def __init__(self, name, host, debug=False):
+        super().__init__(name, host, debug)
         self._session_key = None
         self.load_key()
 

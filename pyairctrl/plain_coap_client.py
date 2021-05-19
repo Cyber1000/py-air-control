@@ -15,8 +15,8 @@ from .base_client import CoAPAirClientBase
 
 
 class PlainCoAPAirClient(CoAPAirClientBase):
-    def __init__(self, host, port=5683, debug=False):
-        super().__init__(host, port, debug)
+    def __init__(self, name, host, port=5683, debug=False):
+        super().__init__(name, host, port, debug)
         # TODO is this really needed for _get?
         # request.type = defines.Types["ACK"]
         # request.token = generate_random_token(4)

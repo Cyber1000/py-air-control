@@ -14,11 +14,11 @@ from pyairctrl.subset_enum import subsetEnum
 class TestCoap:
     @pytest.fixture(scope="class")
     def air_client(self):
-        return CoAPAirClient("127.0.0.1")
+        return CoAPAirClient("coap", "127.0.0.1")
 
     @pytest.fixture(scope="class")
     def air_cli(self):
-        return ClientFactory.create("coap", "127.0.0.1", False)
+        return ClientFactory.create("coap", "cli", "127.0.0.1", False)
 
     @pytest.fixture(scope="class")
     def test_data(self):
@@ -83,7 +83,7 @@ class TestCoap:
         )
 
     def test_key_is_increased(self, control_resource):
-        air_client = CoAPAirClient("127.0.0.1")
+        air_client = CoAPAirClient("coap", "127.0.0.1")
         values = {}
         values["mode"] = "A"
         result = air_client.set_values(values)
@@ -93,7 +93,7 @@ class TestCoap:
         )
 
     def test_response_is_cut_off_should_return_error(self, status_resource, capfd):
-        air_client = CoAPAirClient("127.0.0.1")
+        air_client = CoAPAirClient("coap", "127.0.0.1")
         status_resource.set_render_callback(self.cutoff_data)
         air_client.get_information()
         result, err = capfd.readouterr()

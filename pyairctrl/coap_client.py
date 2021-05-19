@@ -18,8 +18,8 @@ class WrongDigestException(Exception):
 class CoAPAirClient(CoAPAirClientBase):
     SECRET_KEY = "JiangPan"
 
-    def __init__(self, host, port=5683, debug=False):
-        super().__init__(host, port, debug)
+    def __init__(self, name, host, port=5683, debug=False):
+        super().__init__(name, host, port, debug)
 
     def _initConnection(self):
         self.syncrequest = binascii.hexlify(os.urandom(4)).decode("utf8").upper()

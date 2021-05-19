@@ -21,11 +21,12 @@ class SetValueException(Exception):
 
 
 class AirClientBase(ABC):
-    def __init__(self, host, debug=False):
+    def __init__(self, name, host, debug=False):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel("WARN") if debug else self.logger.setLevel("DEBUG")
         self._host = host
         self._debug = debug
+        self.name = name
 
     @classmethod
     def _get_info_for_key(cls, key, raw_value, subset):
@@ -96,8 +97,8 @@ class CoAPAirClientBase(AirClientBase):
     CONTROL_PATH = "/sys/dev/control"
     SYNC_PATH = "/sys/dev/sync"
 
-    def __init__(self, host, port, debug=False):
-        super().__init__(host, debug)
+    def __init__(self, name, host, port, debug=False):
+        super().__init__(name, host, debug)
         self.port = port
         self.client = self._create_coap_client(self._host, self.port)
         self.response = None

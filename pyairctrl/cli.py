@@ -90,7 +90,9 @@ class Cli:
         devices = cls.get_devices(args.protocol, args.ipaddr, debug=args.debug)
         for device in devices:
             c = cls(
-                ClientFactory.create(args.protocol, device["ip"], debug=args.debug),
+                ClientFactory.create(
+                    args.protocol, "cli", device["ip"], debug=args.debug
+                ),
                 debug=args.debug,
             )
 

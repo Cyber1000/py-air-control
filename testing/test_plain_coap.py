@@ -26,11 +26,11 @@ class TestPlainCoap:
             return
 
         monkeyclass.setattr(PlainCoAPAirClient, "_initConnection", initConnection)
-        return PlainCoAPAirClient("127.0.0.1")
+        return PlainCoAPAirClient("plain_coap", "127.0.0.1")
 
     @pytest.fixture(scope="class")
     def air_cli(self):
-        return ClientFactory.create("plain_coap", "127.0.0.1", False)
+        return ClientFactory.create("plain_coap", "cli", "127.0.0.1", False)
 
     @pytest.fixture(scope="class")
     def test_data(self):
