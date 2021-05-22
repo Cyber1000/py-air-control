@@ -2,6 +2,7 @@
 
 import argparse
 from pyairctrl.cli import Cli
+from pyairctrl.service import Service
 
 
 def main():
@@ -52,7 +53,10 @@ def main():
     )
     args = parser.parse_args()
 
-    if not args.service:
+    if args.service:
+        service = Service(args.debug)
+        service.start()
+    else:
         Cli.execute(args)
 
 

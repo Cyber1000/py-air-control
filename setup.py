@@ -1,7 +1,7 @@
 import setuptools
 import sys
 
-if sys.version_info < (3,4):
+if sys.version_info < (3, 4):
     sys.exit("Python 3.4 or newer is required.")
 
 with open("README.md", "r") as fh:
@@ -16,15 +16,19 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/rgerganov/py-air-control",
-    packages=['pyairctrl'],
+    packages=["pyairctrl"],
     install_requires=[
-        'pycryptodomex>=3.4.7',
-        'CoAPthon3>=1.0.1'
-        ],
+        "pycryptodomex>=3.4.7",
+        "CoAPthon3>=1.0.1",
+        "pyyaml>=5.4.1",
+        "flask>=2.0.0",
+        "waitress>=2.0.0",
+        "Cerberus>=1.3.4",
+    ],
     entry_points={
-        'console_scripts': [
-            'airctrl=pyairctrl.airctrl:main',
-            'cloudctrl=pyairctrl.cloudctrl:main',
+        "console_scripts": [
+            "airctrl=pyairctrl.airctrl:main",
+            "cloudctrl=pyairctrl.cloudctrl:main",
         ],
     },
     classifiers=[

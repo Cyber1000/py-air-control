@@ -11,6 +11,8 @@ import random
 import socket
 import urllib.request
 import xml.etree.ElementTree as ET
+import time
+import threading
 
 from collections import OrderedDict
 from Cryptodome.Cipher import AES
@@ -106,8 +108,8 @@ class HTTPAirClient(AirClientBase):
 
         return resp
 
-    def __init__(self, name, host, port=80, debug=False):
-        super().__init__(name, host, port, debug)
+    def __init__(self, name, host, port=80, debug=False, additionalArgs=None):
+        super().__init__(name, host, port, debug, additionalArgs)
         self._session_key = None
         self.load_key()
 
@@ -205,6 +207,29 @@ class HTTPAirClient(AirClientBase):
             # TODO what is returned here?
             return wifi == '{"status":"success"}'
 
+    def start_observing(self):
+        interval = self._get_additionalArg("poll-timeout")
+        if interval == 0:
+            self._isObserving = False
+        else:
+            self._isObserving = True
+            observe = threading.Thread(target=self._run, daemon=True)
+            observe.start()
+
+    def _run(self):
+        while self._isObserving:
+            self._read_from_device(subsetEnum.status)
+            self._read_from_device(subsetEnum.firmware)
+            self._read_from_device(subsetEnum.wifi)
+            self._read_from_device(subsetEnum.filter)
+            interval = self._get_additionalArg("poll-timeout")
+            if interval is None:
+                interval = 5
+            time.sleep(interval)
+
+    def stop_observing(self):
+        self._isObserving = False
+
     def _get_once(self, url):
         with urllib.request.urlopen(url) as response:
             resp = response.read()
@@ -221,7 +246,7 @@ class HTTPAirClient(AirClientBase):
             self._get_key()
             return self._get_once(url)
 
-    def get_information(self, subset=None):
+    def _read_from_device(self, subset):
         if subset is None:
             url = "http://{host}:{port}/di/v1/products/1/air".format(
                 host=self._host, port=self._port
@@ -239,9 +264,7 @@ class HTTPAirClient(AirClientBase):
                 host=self._host, port=self._port
             )
 
-        info = self._get(url)
-        info = self._dump_keys(info, subset)
-        return info
+        self._current_information[subset] = self._get(url)
 
     def pair(self, client_id, client_secret):
         values = {}
